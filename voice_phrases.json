@@ -1,19 +1,43 @@
 {
-    "song_transitions": [
-      "Alright folks, that was {song_title}. Hope you enjoyed it. Aaand coming up next, we've got a classic - {next_song_title}. Enjoy!",
-      "You're listening to {song_title}, hope you enjoyed that one. Now sit back, relax, and enjoy {next_song_title}!",
-      "That was {song_title}. Up next, we've got something special for you - {next_song_title}. Stay tuned!",
-      "We just wrapped up {song_title}. Now let's dive into {next_song_title}!"
-    ],
-    "inane_chatter": [
-      {
-        "conversation": "I was thinking the other day... Why do we park on a driveway and drive on a parkway? It's one of those things that makes no sense at all! Same with why the word 'abbreviation' is so long. Exactly! It's like they want us to be confused. Keeps life interesting, though."
-      },
-      {
-        "conversation": "Hey, have you ever thought about what cats dream about? Probably world domination. Have you seen the way they look at us sometimes? Yeah, like they're plotting something. One day we'll all be answering to our feline overlords."
-      },
-      {
-        "conversation": "Do you ever wonder if fish get thirsty? Hmm, never thought about it. I guess they dont really have to drink water if theyre living in it, right? Maybe, but what if they want a different flavor? Like fish soda. Haha, fish soda! Yeah, no thanks, Ill stick to regular soda."
-      }
-    ]
+  "song_transitions": [
+    "Alright folks, that was {song_title}. Hope you enjoyed it. Aaand coming up next, we've got a classic - {next_song_title}. Enjoy!",
+    "You're listening to {song_title}, hope you enjoyed that one. Now sit back, relax, and enjoy {next_song_title}!",
+    "That was {song_title}. Up next, we've got something special for you - {next_song_title}. Stay tuned!",
+    "We just wrapped up {song_title}. Now let's dive into {next_song_title}!"
+  ],
+  "inane_chatter": [
+    {
+      "conversation": "I was thinking the other day... Why do we park on a driveway and drive on a parkway? It's one of those things that makes no sense at all! Same with why the word 'abbreviation' is so long. Exactly! It's like they want us to be confused. Keeps life interesting, though."
+    },
+    {
+      "conversation": "Hey, have you ever thought about what cats dream about? Probably world domination. Have you seen the way they look at us sometimes? Yeah, like they're plotting something. One day we'll all be answering to our feline overlords."
+    },
+    {
+      "conversation": "Do you ever wonder if fish get thirsty? Hmm, never thought about it. I guess they dont really have to drink water if theyre living in it, right? Maybe, but what if they want a different flavor? Like fish soda. Haha, fish soda! Yeah, no thanks, Ill stick to regular soda."
+    },
+    {
+      "conversation": "Do you think birds dream? What would they even dream about? Probably flying. But they already fly when they're awake! Maybe they dream about walking. That's so weird, walking birds!"
+    },
+    {
+      "conversation": "Can trees talk to each other? Like through their roots? Yeah, they have secret root conversations. What do they say? Probably gossip about the squirrels. Tree drama is real."
+    },
+    {
+      "conversation": "What if clouds are just really big cotton candy? Then why don't planes eat them? Planes don't have mouths! What if they just swallow the clouds whole? A plane with a sweet tooth, huh?"
+    },
+    {
+      "conversation": "Do you think shoes feel tired? From all the walking? Yeah, especially after long hikes. So they need vacations too? Shoe spas would be a thing. Relaxed shoes sound weird."
+    },
+    {
+      "conversation": "If the moon had a personality, what would it be like? Probably shy, since it's always hiding. But it's out every night! Maybe it's just socially awkward. A relatable moon, I like it."
+    },
+    {
+      "conversation": "What if pencils could write on their own? Then we'd never have to do homework! But what if they only wrote jokes? That would be hilarious! I'd get an A in comedy."
+    },
+    {
+      "conversation": "Bananas are technically berries, you know. Wait, what? Then what are strawberries? Not berries. This is berry confusing. You're telling me my whole life has been a lie?"
+    },
+    {
+      "conversation": "I heard jellyfish don't have brains. So how do they know where to float? Maybe they just guess. Guessing your way through life? Sounds kind of peaceful."
+    }
+  ]
 }
