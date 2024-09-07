@@ -2,3 +2,4 @@ chatter/
 .env
 radio_show_output.wav
 mymusic/
+*.wav
