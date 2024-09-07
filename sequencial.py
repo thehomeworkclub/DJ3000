@@ -30,6 +30,7 @@ song_titles, song_paths = get_song_titles(DIRECTORY)
 
 if song_titles:
         # TODO: Shuffle Songs
+        # TODO: Work on better sounding transitions
         first_song_title = song_titles[0]
         first_song_intro_audio = create_first_song_intro(first_song_title)
         first_song_audio = AudioSegment.from_mp3(song_paths[0])
@@ -78,6 +79,7 @@ print(f"Segment {CURRENT_SEGMENT} created")
 
 # MID SEGMENTS
 
+# TODO: See if this works
 while True:
     if LAST_SESSION_TIME - time.time() < 300:
         segment_audio = AudioSegment.silent(duration=1000) + create_mid_show_intro(time=time.strftime("%I:%M %p", time.localtime(time.time() + 300))) + AudioSegment.silent(duration=2000)
