@@ -154,6 +154,18 @@ def transition_with_fade(previous_song, announcement, next_song, fade_duration=2
 
     return combined_audio
 
+def shuffle_corresponding_arrays(song_titles, song_paths):
+    # Combine the two lists
+    combined = list(zip(song_titles, song_paths))
+    
+    # Shuffle the combined list
+    random.shuffle(combined)
+    
+    # Unpack the shuffled list back into two separate lists
+    shuffled_song_titles, shuffled_song_paths = zip(*combined)
+    
+    return shuffled_song_titles, shuffled_song_paths
+
 def create_radio_show(directory):
     song_titles, song_paths = get_song_titles(directory)
     combined_audio = create_intro_audio()

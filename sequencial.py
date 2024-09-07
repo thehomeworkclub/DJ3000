@@ -12,9 +12,11 @@ from pydub import AudioSegment
 
 SESSION_ID = uuid.uuid4()
 LAST_SESSION_TIME = time.time()
-DIRECTORY = ".//Music"
+DIRECTORY = ".//mymusic"
 LAST_COMPLETED_SONG_INDEX = 0
 CURRENT_SEGMENT = 0
+LOOPING_ENABLED = False
+FINISHED = False
 
 # DELETE LAST SESSION
 
@@ -26,10 +28,10 @@ segment_audio = create_intro_audio() + AudioSegment.silent(duration=2000)
 
 # FIRST SONG
 
-song_titles, song_paths = get_song_titles(DIRECTORY)
+song_titles_unshuffled, song_paths_unshuffled = get_song_titles(DIRECTORY)
+song_titles, song_paths = shuffle_corresponding_arrays(song_titles_unshuffled, song_paths_unshuffled)
 
 if song_titles:
-        # TODO: Shuffle Songs
         # TODO: Work on better sounding transitions
         first_song_title = song_titles[0]
         first_song_intro_audio = create_first_song_intro(first_song_title)
@@ -67,9 +69,12 @@ if song_titles:
             LAST_COMPLETED_SONG_INDEX = index + 1
 
 # SET LOOPING 
-
-if LAST_COMPLETED_SONG_INDEX == len(song_titles):
-    LAST_COMPLETED_SONG_INDEX = 0
+if LOOPING_ENABLED:
+    if LAST_COMPLETED_SONG_INDEX == len(song_titles)-1:
+        LAST_COMPLETED_SONG_INDEX = 0
+else:
+    if LAST_COMPLETED_SONG_INDEX == len(song_titles)-1:
+        FINISHED = True
 
 Segments.create(segment_name="segment_" + str(CURRENT_SEGMENT), session_id=SESSION_ID, time_start=LAST_SESSION_TIME, time_end=LAST_SESSION_TIME + segment_audio.duration_seconds, last_song_index=LAST_COMPLETED_SONG_INDEX)
 CURRENT_SEGMENT += 1
@@ -77,11 +82,17 @@ LAST_SESSION_TIME += segment_audio.duration_seconds
 segment_audio.export(f"segment_{CURRENT_SEGMENT}.wav", format="wav")
 print(f"Segment {CURRENT_SEGMENT} created")
 
+print("FINISHED:" + str(FINISHED))
+print("LAST_COMPLETED_SONG_INDEX:" + str(LAST_COMPLETED_SONG_INDEX))
+print("TOTAL SONGS:" + str(len(song_titles)))
+
 # MID SEGMENTS
 
 # TODO: See if this works
 while True:
-    if LAST_SESSION_TIME - time.time() < 300:
+    if FINISHED:
+        break
+    if LAST_SESSION_TIME - time.time() < 30000:
         segment_audio = AudioSegment.silent(duration=1000) + create_mid_show_intro(time=time.strftime("%I:%M %p", time.localtime(time.time() + 300))) + AudioSegment.silent(duration=2000)
         while True:
             for index in range(LAST_COMPLETED_SONG_INDEX, len(song_titles) - 1):
@@ -113,9 +124,12 @@ while True:
             if segment_audio.duration_seconds > 1800:
                 break
             else:
-                print("Radio is Looping")
-                LAST_COMPLETED_SONG_INDEX = 0
-        
+                if LOOPING_ENABLED:
+                    if LAST_COMPLETED_SONG_INDEX == len(song_titles)-1:
+                        LAST_COMPLETED_SONG_INDEX = 0
+                else:
+                    FINISHED = True
+                    break
         Segments.create(segment_name="segment_" + str(CURRENT_SEGMENT), session_id=SESSION_ID, time_start=LAST_SESSION_TIME, time_end=LAST_SESSION_TIME + segment_audio.duration_seconds, last_song_index=LAST_COMPLETED_SONG_INDEX)
         CURRENT_SEGMENT += 1
         LAST_SESSION_TIME += segment_audio.duration_seconds
