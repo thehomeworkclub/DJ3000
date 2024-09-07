@@ -12,7 +12,7 @@ from pydub import AudioSegment
 
 SESSION_ID = uuid.uuid4()
 LAST_SESSION_TIME = time.time()
-DIRECTORY = ".//mymusic"
+DIRECTORY = ".//Music"
 LAST_COMPLETED_SONG_INDEX = 0
 CURRENT_SEGMENT = 0
 
