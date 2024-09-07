@@ -71,11 +71,26 @@ def elevenlabs_tts(text, output_file, voice_id, stability=0.2, similarity_boost=
     return False
 
 def create_intro_audio():
-    bob_intro = "Hey there, and welcome to DJ3000 radio - all day, every day, 24/7. I'm Bob."
+    bob_intro = "Hey there, and welcome to DJ3000 radio - all day, every day, 24 7. I'm Bob."
     ryan_intro = "And I'm Ryan, and this is DJ3000!"
 
     bob_intro_file = os.path.join(chatter_dir, "bob_intro_radio.mp3")
     ryan_intro_file = os.path.join(chatter_dir, "ryan_intro_radio.mp3")
+
+    elevenlabs_tts(bob_intro, bob_intro_file, ELEVEN_LABS_VOICE_ID_1)
+    elevenlabs_tts(ryan_intro, ryan_intro_file, ELEVEN_LABS_VOICE_ID_2)
+
+    bob_audio = AudioSegment.from_mp3(bob_intro_file)
+    ryan_audio = AudioSegment.from_mp3(ryan_intro_file)
+
+    return bob_audio + ryan_audio
+
+def create_mid_show_intro(time):
+    bob_intro = "Yo yo! The time is " + str(time) + " and you're listening to DJ3000 radio. I'm Bob."
+    ryan_intro = "And I'm Ryan! Thanks for tuning in to DJ3000, lets keep going with that music!!"
+
+    bob_intro_file = os.path.join(chatter_dir, "bob_mid_show_radio.mp3")
+    ryan_intro_file = os.path.join(chatter_dir, "ryan_late_show_radio.mp3")
 
     elevenlabs_tts(bob_intro, bob_intro_file, ELEVEN_LABS_VOICE_ID_1)
     elevenlabs_tts(ryan_intro, ryan_intro_file, ELEVEN_LABS_VOICE_ID_2)
@@ -95,9 +110,9 @@ def generate_inane_chatter():
     for i, sentence in enumerate(sentences):
         voice_id = ELEVEN_LABS_VOICE_ID_1 if i % 2 == 0 else ELEVEN_LABS_VOICE_ID_2
         chatter_file = os.path.join(chatter_dir, f"inane_chatter_{i}.mp3")
-        elevenlabs_tts(sentence, chatter_file, voice_id, stability=0.1, similarity_boost=0.95)
+        elevenlabs_tts(sentence, chatter_file, voice_id, stability=0.2, similarity_boost=0.95)
         sentence_audio = AudioSegment.from_mp3(chatter_file)
-        chatter_audio = chatter_audio + sentence_audio
+        chatter_audio = chatter_audio + sentence_audio + AudioSegment.silent(duration=300)
 
     return chatter_audio
 
@@ -125,7 +140,7 @@ def create_first_song_intro(song_title):
     return AudioSegment.from_mp3(first_intro_file)
 
 
-def transition_with_fade(previous_song, announcement, next_song, fade_duration=5000):
+def transition_with_fade(previous_song, announcement, next_song, fade_duration=2000):
     prev_song_duration = len(previous_song)
 
     faded_out_song = previous_song.fade_out(fade_duration)
@@ -133,7 +148,7 @@ def transition_with_fade(previous_song, announcement, next_song, fade_duration=5
     combined_audio = faded_out_song.overlay(announcement, position=(prev_song_duration - fade_duration))
 
     half_announcement_duration = len(announcement) // 2
-    new_song_fade_in = next_song.fade_in(fade_duration)
+    new_song_fade_in = next_song.fade_in(fade_duration + half_announcement_duration)
 
     combined_audio = combined_audio.overlay(new_song_fade_in, position=(prev_song_duration + half_announcement_duration))
 
@@ -151,7 +166,7 @@ def create_radio_show(directory):
         combined_audio = combined_audio + first_song_intro_audio + first_song_audio
         print(f"Added first song intro and song for {first_song_title}")
 
-    for index in range(0, len(song_titles) - 1):
+    for index in range(1, len(song_titles) - 1):
         song_title = song_titles[index]
         next_song_title = song_titles[index + 1]
 
