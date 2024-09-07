@@ -92,7 +92,8 @@ print("TOTAL SONGS:" + str(len(song_titles)))
 while True:
     if FINISHED:
         break
-    if LAST_SESSION_TIME - time.time() < 30000:
+    # CHANGE 1800 TO 30000 FOR TESTING
+    if LAST_SESSION_TIME - time.time() < 1800:
         segment_audio = AudioSegment.silent(duration=1000) + create_mid_show_intro(time=time.strftime("%I:%M %p", time.localtime(time.time() + 300))) + AudioSegment.silent(duration=2000)
         while True:
             for index in range(LAST_COMPLETED_SONG_INDEX, len(song_titles) - 1):
