@@ -34,7 +34,8 @@ def elevenlabs_tts(text, output_file, voice_id, stability=0.2, similarity_boost=
         "text": text,
         "voice_settings": {
             "stability": stability,
-            "similarity_boost": similarity_boost
+            "similarity_boost": similarity_boost,
+            "model_version": "turbo_v2.5"
         }
     }
     
@@ -58,7 +59,8 @@ def elevenlabs_tts(text, output_file, voice_id, stability=0.2, similarity_boost=
             "text": fallback_text,
             "voice_settings": {
                 "stability": stability,
-                "similarity_boost": similarity_boost
+                "similarity_boost": similarity_boost,
+                "model_version": "turbo_v2.5"
             }
         }
         response = requests.post(url.format(voice_id=voice_id), headers=headers, json=fallback_data)
@@ -103,18 +105,29 @@ def create_mid_show_intro(time):
 def generate_inane_chatter():
     conversation = random.choice(voice_phrases["inane_chatter"])["conversation"]
     sentences = nltk.sent_tokenize(conversation)
-    print(sentences)
+    print("Generating banter: ", sentences)
 
     chatter_audio = AudioSegment.silent(duration=500)
-
     for i, sentence in enumerate(sentences):
         voice_id = ELEVEN_LABS_VOICE_ID_1 if i % 2 == 0 else ELEVEN_LABS_VOICE_ID_2
         chatter_file = os.path.join(chatter_dir, f"inane_chatter_{i}.mp3")
-        elevenlabs_tts(sentence, chatter_file, voice_id, stability=0.2, similarity_boost=0.95)
-        sentence_audio = AudioSegment.from_mp3(chatter_file)
-        chatter_audio = chatter_audio + sentence_audio + AudioSegment.silent(duration=300)
+        
+        success = elevenlabs_tts(sentence, chatter_file, voice_id, stability=0.2, similarity_boost=0.95)
+        if success:
+            print(f"Banter sentence {i} generated for voice {voice_id}")
+        else:
+            print(f"Failed to generate banter for sentence {i} with voice {voice_id}")
+            continue
+
+        if os.path.exists(chatter_file):
+            sentence_audio = AudioSegment.from_mp3(chatter_file)
+            chatter_audio = chatter_audio + sentence_audio + AudioSegment.silent(duration=300)
+        else:
+            print(f"Audio file {chatter_file} not found")
 
     return chatter_audio
+
+
 
 def get_song_titles(directory):
     song_titles = []
@@ -140,29 +153,37 @@ def create_first_song_intro(song_title):
     return AudioSegment.from_mp3(first_intro_file)
 
 
-def transition_with_fade(previous_song, announcement, next_song, fade_duration=2000):
-    prev_song_duration = len(previous_song)
+def transition_with_fade(previous_song, announcement, next_song, fade_duration=600):
+    announcement_half = announcement[:len(announcement) // 2]
+    previous_song_duration = len(previous_song)
+    previous_song_with_announcement = previous_song.fade_out(fade_duration).overlay(announcement_half, position=(previous_song_duration - len(announcement_half)))
 
-    faded_out_song = previous_song.fade_out(fade_duration)
+    initial_next_song_segment = 200
+    ms2_next_song = next_song[:initial_next_song_segment] - 12
+    ms3_next_song = next_song[initial_next_song_segment:].fade_in(fade_duration)
 
-    combined_audio = faded_out_song.overlay(announcement, position=(prev_song_duration - fade_duration))
+    full_next_song = ms2_next_song + ms3_next_song
 
-    half_announcement_duration = len(announcement) // 2
-    new_song_fade_in = next_song.fade_in(fade_duration + half_announcement_duration)
+    announcement_second_half = announcement[len(announcement) // 2:]
+    next_song_with_announcement = full_next_song.overlay(announcement_second_half)
 
-    combined_audio = combined_audio.overlay(new_song_fade_in, position=(prev_song_duration + half_announcement_duration))
+    return previous_song_with_announcement + next_song_with_announcement
 
-    return combined_audio
+
+
+
 
 def shuffle_corresponding_arrays(song_titles, song_paths):
-    # Combine the two lists
     combined = list(zip(song_titles, song_paths))
-    
-    # Shuffle the combined list
     random.shuffle(combined)
-    
-    # Unpack the shuffled list back into two separate lists
     shuffled_song_titles, shuffled_song_paths = zip(*combined)
+    
+    while any(shuffled_song_titles[i] == shuffled_song_titles[i + 1] for i in range(len(shuffled_song_titles) - 1)):
+        random.shuffle(combined)
+        shuffled_song_titles, shuffled_song_paths = zip(*combined)
+
+    return shuffled_song_titles, shuffled_song_paths
+
     
     return shuffled_song_titles, shuffled_song_paths
 
@@ -178,9 +199,15 @@ def create_radio_show(directory):
         combined_audio = combined_audio + first_song_intro_audio + first_song_audio
         print(f"Added first song intro and song for {first_song_title}")
 
-    for index in range(1, len(song_titles) - 1):
+    for index in range(LAST_COMPLETED_SONG_INDEX, len(song_titles) - 1):
+        if segment_audio.duration_seconds > 1800:
+            break
         song_title = song_titles[index]
         next_song_title = song_titles[index + 1]
+
+        # Prevent repeating the same song
+        if song_title == next_song_title:
+            continue
 
         transition_phrase = random.choice(voice_phrases["song_transitions"]).format(song_title=song_title, next_song_title=next_song_title)
         transition_file = os.path.join(chatter_dir, f"transition_{index}.mp3")
@@ -194,12 +221,17 @@ def create_radio_show(directory):
             song_audio = AudioSegment.from_mp3(song_paths[index])
             next_song_audio = AudioSegment.from_mp3(song_paths[index + 1])
 
-            combined_audio = combined_audio + transition_with_fade(song_audio, transition_audio, next_song_audio)
+            segment_audio = segment_audio + transition_with_fade(song_audio, transition_audio, next_song_audio)
             print(f"Added transition and song for {song_title}")
 
-        if random.randint(1, 3) == 1:
-            insane_chatter_audio = generate_inane_chatter()
-            combined_audio = combined_audio + insane_chatter_audio
+        # Always move to the next song, even if something fails
+        LAST_COMPLETED_SONG_INDEX = index + 1
+
+
+        # if random.randint(1, 3) == 1:
+        insane_chatter_audio = generate_inane_chatter()
+        combined_audio = combined_audio + insane_chatter_audio
+        
 
     output_wav = "radio_show_output.wav"
     combined_audio.export(output_wav, format="wav")
