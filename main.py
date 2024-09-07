@@ -4,11 +4,18 @@ import requests
 from pydub import AudioSegment
 import random
 import json
+import nltk
 import time
+from dotenv import load_dotenv
+
+nltk.download('punkt_tab')
+
+load_dotenv()
 
 ELEVEN_LABS_API_KEY = os.getenv("ELEVEN_LABS_API_KEY")
 ELEVEN_LABS_VOICE_ID_1 = "Uq9DKccXXKZ6lc53ATJV"  
 ELEVEN_LABS_VOICE_ID_2 = "rWV5HleMkWb5oluMwkA7"  
+
 
 chatter_dir = "chatter"
 if not os.path.exists(chatter_dir):
@@ -80,7 +87,8 @@ def create_intro_audio():
 
 def generate_inane_chatter():
     conversation = random.choice(voice_phrases["inane_chatter"])["conversation"]
-    sentences = conversation.split(".")
+    sentences = nltk.sent_tokenize(conversation)
+    print(sentences)
 
     chatter_audio = AudioSegment.silent(duration=500)
 
@@ -163,13 +171,9 @@ def create_radio_show(directory):
             print(f"Added transition and song for {song_title}")
 
         if random.randint(1, 3) == 1:
-            inane_chatter_audio = generate_inane_chatter()
-            combined_audio = combined_audio + inane_chatter_audio
+            insane_chatter_audio = generate_inane_chatter()
+            combined_audio = combined_audio + insane_chatter_audio
 
     output_wav = "radio_show_output.wav"
     combined_audio.export(output_wav, format="wav")
     print(f"Generated full radio show: {output_wav}")
-
-
-directory = ".//Music"
-create_radio_show(directory)
