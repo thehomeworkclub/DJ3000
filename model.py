@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-db = PostgresqlDatabase('segments', user="segments_owner", password=os.environ.get("PG_PASS"), host="ep-little-union-a682nje5.us-west-2.aws.neon.tech")
+db = PostgresqlDatabase('segments', user="segments_owner", password=os.environ.get("PG_PASS"), host="ep-little-union-a682nje5.us-west-2.aws.neon.tech?sslmode=require")
 
 class Segments(Model):
     id = AutoField()

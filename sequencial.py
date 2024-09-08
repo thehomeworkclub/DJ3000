@@ -80,6 +80,7 @@ def first_song_transition(first_song, first_announcement, second_song, fade_dura
 song_titles_unshuffled, song_paths_unshuffled = get_song_titles(DIRECTORY)
 song_titles, song_paths = shuffle_corresponding_arrays(song_titles_unshuffled, song_paths_unshuffled)
 
+
 if len(song_titles) > 1:
     first_song_title = song_titles[0]
     second_song_title = song_titles[1]
