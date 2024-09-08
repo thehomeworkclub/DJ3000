@@ -39,5 +39,5 @@ for item in items:
     headlines.append([item.find("title").text, item.find("description").text])
 
 #
-nws = news(prompt, str([['Today the weather in Irvine, California is 103*F with highs in the 107s and the lows in the 80s', "Only report about the weather. DO NOT add anything else tok the list!"]])) + AudioSegment.silent(duration=50000)
+nws = news(prompt, str(random.choice(headlines))) + AudioSegment.silent(duration=50000)
 nws.export("test.wav", format="wav")

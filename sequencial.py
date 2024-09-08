@@ -222,7 +222,7 @@ while True:
                     FINISHED = True
                     break
         CURRENT_SEGMENT += 1
-        segment_audio.export(f"segment_{CURRENT_SEGMENT}.wav", format="wav")
+        segment_audio.export(f"segment_{CURRENT_SEGMENT}_{str(SESSION_ID)}.wav", format="wav")
         fle = open(f"segment_{CURRENT_SEGMENT}_{str(SESSION_ID)}.wav", "rb")
         s3.upload_fileobj(fle, "dj3000", f"segment_{CURRENT_SEGMENT}_{str(SESSION_ID)}.wav")
         Segments.create(segment_name=f"segment_{CURRENT_SEGMENT}_{str(SESSION_ID)}", session_id=SESSION_ID, time_start=LAST_SESSION_TIME, time_end=LAST_SESSION_TIME + segment_audio.duration_seconds, last_song_index=LAST_COMPLETED_SONG_INDEX)
