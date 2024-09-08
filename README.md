@@ -130,7 +130,3 @@ Here’s an example of how the system generates a playlist and transitions betwe
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
-
-## Contributors
-- **[Your Name]** - Initial Work
