@@ -35,7 +35,7 @@ def elevenlabs_tts(text, output_file, voice_id, stability=0.2, similarity_boost=
         "voice_settings": {
             "stability": stability,
             "similarity_boost": similarity_boost,
-            "model_version": "turbo_v2.5"
+            "model_version": "eleven_turbo_v2_5"
         }
     }
     

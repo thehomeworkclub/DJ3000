@@ -10,7 +10,7 @@ from pydub import AudioSegment
 
 SESSION_ID = uuid.uuid4()
 LAST_SESSION_TIME = time.time()
-DIRECTORY = ".//Music"
+DIRECTORY = ".//mymusic"
 LAST_COMPLETED_SONG_INDEX = 0
 CURRENT_SEGMENT = 0
 LOOPING_ENABLED = False
@@ -160,3 +160,7 @@ while True:
         CURRENT_SEGMENT += 1
         LAST_SESSION_TIME += segment_audio.duration_seconds
         segment_audio.export(f"segment_{CURRENT_SEGMENT}.wav", format="wav")
+        print("FINISHED:" + str(FINISHED))
+        print("LAST_COMPLETED_SONG_INDEX:" + str(LAST_COMPLETED_SONG_INDEX))
+        print("TOTAL SONGS:" + str(len(song_titles)))
+    print("Generating Next Segment in: " + str(int(LAST_SESSION_TIME - time.time() - 300)) + " seconds", end="\r")
