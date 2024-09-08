@@ -32,6 +32,7 @@ This system uses **Python**, **Pydub**, **ElevenLabs API**, and a Raspberry Pi t
 - [Weather Demo](https://cdn.primitt.dev/uploads/7c7d1ab6-150c-4e1d-ab43-a5c169e233cc.wav)
 
 *Intro and Mid Segment may take some time to load as they are large files and have to be downloaded from s3 on the server side.*
+*Segments may be loud in google chrome web player*
 
 ---
 
