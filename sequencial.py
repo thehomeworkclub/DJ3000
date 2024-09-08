@@ -76,6 +76,30 @@ def first_song_transition(first_song, first_announcement, second_song, fade_dura
     return first_song_with_announcement + second_song_with_announcement
 
 # FIRST SONG
+def generate_weather_report(prompt, location="Irvine, California"):
+    api_key = os.getenv("WEATHER_API_KEY")  
+    weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&appid={api_key}&units=imperial"
+    
+    try:
+        response = requests.get(weather_url)
+        weather_data = response.json()
+        if response.status_code == 200 and "main" in weather_data:
+            temperature = weather_data["main"]["temp"]
+            high_temp = weather_data["main"]["temp_max"]
+            low_temp = weather_data["main"]["temp_min"]
+            description = f"Today the weather in {location} is {temperature}°F with highs of {high_temp}°F and lows of {low_temp}°F."
+            
+            weather_report = [[description, "Only report about the weather. DO NOT add anything else to the list!"]]
+            
+            news_audio = news(prompt, json.dumps(weather_report))
+            return news_audio
+        else:
+            print(f"Failed to fetch weather data for {location}: {response.status_code}")
+    except Exception as e:
+        print(f"Error while generating weather report: {e}")
+    
+    return None
+
 
 song_titles_unshuffled, song_paths_unshuffled = get_song_titles(DIRECTORY)
 song_titles, song_paths = shuffle_corresponding_arrays(song_titles_unshuffled, song_paths_unshuffled)
