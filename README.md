@@ -38,7 +38,7 @@ This system uses **Python**, **Pydub**, **ElevenLabs API**, and a Raspberry Pi t
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-repo/dj3000-radio.git
+   git clone https://github.com/thehomeworkclub/DJ3000/
    cd dj3000-radio
    ```
 
@@ -51,7 +51,7 @@ This system uses **Python**, **Pydub**, **ElevenLabs API**, and a Raspberry Pi t
    - Obtain an API key from [ElevenLabs](https://elevenlabs.io).
    - Create a `.env` file in the project root and add your API key:
      ```bash
-     ELEVEN_LABS_API_KEY=your_api_key_here
+     ELEVEN_LABS_API_KEY=addapikeyhere
      ```
 
 4. **Install fm_transmitter on Raspberry Pi**:
