@@ -24,6 +24,15 @@ This system uses **Python**, **Pydub**, **ElevenLabs API**, and a Raspberry Pi t
 5. **FM Broadcast**: Using `fm_transmitter`, the `.wav` file is broadcast via FM on a Raspberry Pi.
 
 ---
+## Demo Pre-Generated Files
+- [Intro Segment Demo](https://cdn.primitt.dev/uploads/7dad0c79-7f76-47db-b57d-13341bdfcabf.wav)
+- [Mid Segment Demo](https://cdn.primitt.dev/uploads/ec813cca-0e38-4449-a5a1-f47e0303b55c.wav)
+- [News Demo](https://cdn.primitt.dev/uploads/8ef96c52-9495-4b82-859c-55638b40ecf0.wav)
+- [Weather Demo](https://cdn.primitt.dev/uploads/7c7d1ab6-150c-4e1d-ab43-a5c169e233cc.wav)
+
+*Intro and Mid Segment may take some time to load as they are large files and have to be downloaded from s3 on the server side.*
+
+---
 
 ## Installation
 
