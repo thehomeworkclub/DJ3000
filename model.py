@@ -3,17 +3,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-# Get the endpoint ID from the Neon connection string
-endpoint_id = "ep-little-union-a682nje5"
-
-# Construct the new connection string
-db = PostgresqlDatabase(
-    f"segments?options=endpoint%3D{endpoint_id}",
-    user="segments_owner",
-    password=os.environ.get("PG_PASS"),
-    host=f"{endpoint_id}.us-west-2.aws.neon.tech",
-    sslmode="require"
-)
+db = PostgresqlDatabase('d3rgplacpflhq4', user="u3inloif293kd5", password=os.environ.get("PG_PASS"), port=5432, host="c5flugvup2318r.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com
+", sslmode="require")
 
 class Segments(Model):
     id = AutoField()
