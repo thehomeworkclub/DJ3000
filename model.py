@@ -15,5 +15,3 @@ class Segments(Model):
     class Meta:
         database = db
         
-db.connect()
-db.create_tables([Segments])
