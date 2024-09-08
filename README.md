@@ -139,7 +139,6 @@ Here’s an example of how the system generates a playlist and transitions betwe
 - **Python**: For managing audio and running the core logic.
 - **Pydub**: For slicing and mixing audio files.
 - **ElevenLabs API**: For generating AI voice commentary.
-- **Together.ai**: Summaries for news commentary.
 - **fm_transmitter**: For broadcasting `.wav` files over FM via Raspberry Pi.
 
 ---
