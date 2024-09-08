@@ -1,0 +1,6 @@
+peewee
+pydub
+python-dotenv
+togeather
+nltk
+eyed3
