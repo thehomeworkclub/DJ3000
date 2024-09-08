@@ -114,7 +114,16 @@ if len(song_titles) > 1:
 
             segment_audio = segment_audio + transition_with_fade(song_audio, transition_audio, next_song_audio)
             print(f"Added transition and song for {song_title}")
-
+        if random.randint(1, 3) == 1:
+            print("Generating News")
+            resp = requests.get("https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml")
+            xml_parse = ET.fromstring(resp.text)
+            items = xml_parse.findall("channel/item")
+            headlines = []
+            for item in items:
+                headlines.append([item.find("title").text, item.find("description").text])
+            news_audio = news(prompt, str(random.choice(headlines)))
+                    
         if random.randint(1, 3) == 1:
             insane_chatter_audio = generate_inane_chatter()
             segment_audio = segment_audio + insane_chatter_audio
@@ -132,7 +141,6 @@ else:
 Segments.create(segment_name="segment_" + str(CURRENT_SEGMENT), session_id=SESSION_ID, time_start=LAST_SESSION_TIME, time_end=LAST_SESSION_TIME + segment_audio.duration_seconds, last_song_index=LAST_COMPLETED_SONG_INDEX)
 CURRENT_SEGMENT += 1
 LAST_SESSION_TIME += segment_audio.duration_seconds
-segment_audio.export(f"segment_{CURRENT_SEGMENT}.wav", format="wav")
 print(f"Segment {CURRENT_SEGMENT} created")
 
 print("FINISHED:" + str(FINISHED))
@@ -148,7 +156,7 @@ while True:
         segment_audio = AudioSegment.silent(duration=1000) + create_mid_show_intro(time=time.strftime("%I:%M %p", time.localtime(time.time() + 300))) + AudioSegment.silent(duration=2000)
         while True:
             for index in range(LAST_COMPLETED_SONG_INDEX, len(song_titles) - 1):
-                if segment_audio.duration_seconds > 1800:
+                if segment_audio.duration_seconds > 3600:
                     break
                 song_title = song_titles[index]
                 next_song_title = song_titles[index + 1]
@@ -167,11 +175,9 @@ while True:
 
                     segment_audio = segment_audio + transition_with_fade(song_audio, transition_audio, next_song_audio)
                     print(f"Added transition and song for {song_title}")
-                
-                if random.randint(1, 4) == 1:
-                    insane_chatter_audio = generate_inane_chatter()
-                    segment_audio = segment_audio + insane_chatter_audio
-                if random.randint(1, 5) == 1:
+                    
+                if random.randint(1, 3) == 1:
+                    print("Generating News")
                     resp = requests.get("https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml")
                     xml_parse = ET.fromstring(resp.text)
                     items = xml_parse.findall("channel/item")
@@ -179,8 +185,12 @@ while True:
                     for item in items:
                         headlines.append([item.find("title").text, item.find("description").text])
                     news_audio = news(prompt, str(random.choice(headlines)))
+                    
+                if random.randint(1, 4) == 1:
+                    insane_chatter_audio = generate_inane_chatter()
+                    segment_audio = segment_audio + insane_chatter_audio
                 LAST_COMPLETED_SONG_INDEX = index + 1
-            if segment_audio.duration_seconds > 1800:
+            if segment_audio.duration_seconds > 3600:
                 break
             else:
                 if LOOPING_ENABLED:
