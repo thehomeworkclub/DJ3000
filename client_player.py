@@ -35,6 +35,9 @@ while True:
             print("Found segments: " + str(len(segments_in_local)))
             break
     for segment in segments_in_local:
+        while True:
+            if os.path.exists(f"segment_{segment.id}.wav"):
+                break
         if segment.id > LAST_SEGMENT_PLAYED:
             print("Playing segment %s" % segment.segment_name)
             LAST_SEGMENT_PLAYED = segment.id
