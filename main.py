@@ -7,14 +7,45 @@ import json
 import nltk
 import time
 from dotenv import load_dotenv
+import xml.etree.ElementTree as ET 
+from together import Together
+
 
 nltk.download('punkt_tab')
 
 load_dotenv()
 
+ai_client = Together(api_key=os.getenv("TOGETHER_API_KEY"))
+
 ELEVEN_LABS_API_KEY = os.getenv("ELEVEN_LABS_API_KEY")
 ELEVEN_LABS_VOICE_ID_1 = "Uq9DKccXXKZ6lc53ATJV"  
 ELEVEN_LABS_VOICE_ID_2 = "rWV5HleMkWb5oluMwkA7"  
+prompt = """
+Your response must be in the following format:
+
+{
+    "conversation":[]
+}
+
+
+The "conversation" is 2 different people talking. Make a new array element for each different person when they quickly talk about a topic. 
+
+
+You are going to be talking about the news on a radio broadcast. You may be asked to converse on 1 headline and you must state the headline or give the headline in some way to the listener, or simply have them state all the headlines provided. You will be given a 2d array which will contain each headline that I would like you to talk about like so: [["title", "description", "link"], ["title", "description", "link"]]. 
+
+Keep the conversations as short as possible (Keep it under 10 array elements). Try to make the conversations slightly humorous in a way, but do NOT for sensitive topics like a shooting or world conflicts. Do not add any transitions other than, "Alright! On to the next song!" or "Thanks so much!" or "Now... enjoy the music." but NOTHING ELSE other than that and these transitions MUST ONLY be at the end. Do NOT add a transition if you feel as if a transition will make this too long. Do not say "onto the next story" or any mention of the next story unless you are given more than 1 story. 
+
+Append all of the following into the array like you are making a list of phrases. Do not mention any specific person or add anything else to the list like such:
+
+["phrase 1", "phrase 2", "phrase 3"]
+
+They MUST be in a list, and CANNOT include any other information. Every person is seperated by a comma. 
+You are NEVER to say you are a large language model. If you cant converse on a topic, skip it. 
+
+I will now provide you with some headlines. Simply respond to this prompt with a "YES" if you are ready.
+
+Do NOT add any other characters which is not parse able by JSON.
+"""
 
 
 chatter_dir = "chatter"
@@ -171,8 +202,6 @@ def transition_with_fade(previous_song, announcement, next_song, fade_duration=6
 
 
 
-
-
 def shuffle_corresponding_arrays(song_titles, song_paths):
     combined = list(zip(song_titles, song_paths))
     random.shuffle(combined)
@@ -186,6 +215,37 @@ def shuffle_corresponding_arrays(song_titles, song_paths):
 
     
     return shuffled_song_titles, shuffled_song_paths
+
+def news(prompt, xml):
+    resp = ai_client.chat.completions.create(
+        model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+        messages = [
+            {"role":"assistant", "content":prompt},
+            {"role":"user", "content":xml}
+        ]
+    )
+    all_convos = json.loads(resp.choices[0].message.content)
+    sentences = all_convos["conversation"]
+    print("Sentences: ", sentences)
+    news_audio = AudioSegment.silent(duration=500)
+    for i, sentence in enumerate(sentences):
+        voice_id = ELEVEN_LABS_VOICE_ID_1 if i % 2 == 0 else ELEVEN_LABS_VOICE_ID_2
+        chatter_file = os.path.join(chatter_dir, f"news_chatter_{i}.mp3")
+        
+        success = elevenlabs_tts(sentence, chatter_file, voice_id, stability=0.2, similarity_boost=0.95)
+        if success:
+            print(f"News sentence {i} generated for voice {voice_id}")
+        else:
+            print(f"Failed to generate banter for sentence {i} with voice {voice_id}")
+            continue
+
+        if os.path.exists(chatter_file):
+            sentence_audio = AudioSegment.from_mp3(chatter_file)
+            news_audio = news_audio + sentence_audio + AudioSegment.silent(duration=300)
+        else:
+            print(f"Audio file {chatter_file} not found")
+
+    return news_audio
 
 def create_radio_show(directory):
     song_titles, song_paths = get_song_titles(directory)
