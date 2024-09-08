@@ -10,7 +10,7 @@ This system uses **Python**, **Pydub**, **ElevenLabs API**, and a Raspberry Pi t
 
 ## Features
 - **Playlist Management**: DJ3000 shuffles a playlist of user-supplied music files.
-- **AI DJ Chatter**: AI-generated back-and-forth chatter between DJ personalities, providing a humorous, lifelike experience.
+- **AI DJ Chatter**: AI-generated back-and-forth chatter between DJ personalities, providing a humorous, lifelike experience ("inane chatter", news, weather).
 - **Song Transitions**: Smooth crossfades between songs with DJ commentary.
 - **FM Broadcast**: Generated `.wav` files are transmitted over FM frequencies using a Raspberry Pi.
   
