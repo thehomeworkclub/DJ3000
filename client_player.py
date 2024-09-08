@@ -37,7 +37,7 @@ while True:
             break
     for segment in segments_in_local:
         while True:
-            if os.path.exists(f"segment_{segment.id}.wav"):
+            if os.path.exists(f"/home/pi/segment_{segment.id}.wav"):
                 break
             else:
                 print("Waiting for segment to finish downloading...", end="\r")
@@ -45,7 +45,7 @@ while True:
         if segment.id > LAST_SEGMENT_PLAYED:
             print("Playing segment %s" % segment.segment_name)
             LAST_SEGMENT_PLAYED = segment.id
-            os.system(f"sudo /home/pi/fm_transmitter/fm_transmitter -f {frequency} -b 300 segment_{segment.id}.wav")
+            os.system(f"sudo /home/pi/fm_transmitter/fm_transmitter -f {frequency} -b 300 /home/pi/segment_{segment.id}.wav")
             # remove the file after playing
             os.remove(f"segment_{segment.id}.wav")
             s3.delete_object(Bucket="dj3000", Key=f"{segment.segment_name}.wav")
