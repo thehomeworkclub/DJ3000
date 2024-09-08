@@ -1,6 +1,6 @@
 peewee
 pydub
 python-dotenv
-togeather
+together
 nltk
 eyed3
