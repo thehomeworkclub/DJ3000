@@ -168,7 +168,7 @@ while True:
                     segment_audio = segment_audio + transition_with_fade(song_audio, transition_audio, next_song_audio)
                     print(f"Added transition and song for {song_title}")
                 
-                if random.randint(1, 2) == 1:
+                if random.randint(1, 4) == 1:
                     insane_chatter_audio = generate_inane_chatter()
                     segment_audio = segment_audio + insane_chatter_audio
                 if random.randint(1, 5) == 1:
