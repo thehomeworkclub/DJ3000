@@ -19,9 +19,10 @@ This system uses **Python**, **Pydub**, **ElevenLabs API**, and a Raspberry Pi t
 ## How it Works
 1. **Playlist Generation**: The user adds songs to a playlist. DJ3000 shuffles the songs and ensures no repeats occur.
 2. **AI Voices**: The ElevenLabs API is used to generate DJ-style voice commentary, which is added between songs.
-3. **Song Transitions**: The system handles crossfading between songs and the insertion of AI-generated chatter.
-4. **WAV File Generation**: DJ3000 exports the entire radio show as a `.wav` file.
-5. **FM Broadcast**: Using `fm_transmitter`, the `.wav` file is broadcast via FM on a Raspberry Pi.
+3. **AI News Commentary**: LLAMA 3.1B from Together.ai is used to generate summaries of news headlines and descriptions from BBC News.
+5. **Song Transitions**: The system handles crossfading between songs and the insertion of AI-generated chatter.
+6. **WAV File Generation**: DJ3000 exports the entire radio show as a `.wav` file.
+7. **FM Broadcast**: Using `fm_transmitter`, the `.wav` file is broadcast via FM on a Raspberry Pi.
 
 ---
 ## Demo Pre-Generated Files
@@ -40,6 +41,8 @@ This system uses **Python**, **Pydub**, **ElevenLabs API**, and a Raspberry Pi t
 - **Python 3.x**
 - **Pydub**: For audio manipulation.
 - **ElevenLabs API**: For AI voice generation.
+- **Together.ai**: For AI Summaries
+- **OpenWeatherAPI**: For localized weather
 - **Raspberry Pi**: For FM broadcasting (Pi 4 reccomended).
 - **fm_transmitter**: A tool to broadcast `.wav` files over FM using a Raspberry Pi.
 
@@ -56,11 +59,14 @@ This system uses **Python**, **Pydub**, **ElevenLabs API**, and a Raspberry Pi t
    pip install -r requirements.txt
    ```
 
-3. **Set up ElevenLabs API**:
+3. **Set up ENV**:
    - Obtain an API key from [ElevenLabs](https://elevenlabs.io).
+   - Obtain an API key from [Together.ai](https://www.together.ai)
    - Create a `.env` file in the project root and add your API key:
      ```bash
-     ELEVEN_LABS_API_KEY=addapikeyhere
+      ELEVEN_LABS_API_KEY=""
+      TOGETHER_API_KEY=""
+     
      ```
 
 4. **Install fm_transmitter on Raspberry Pi**:
@@ -124,7 +130,7 @@ Here’s an example of how the system generates a playlist and transitions betwe
 ## Planned Features
 - **Enhanced Song Metadata**: Use AI to announce the song title and artist in real-time.
 - **Real-time Playlist Updates**: Modify the playlist while the broadcast is live.
-- **Improved FM Broadcasting**: Enhance the signal range of the Raspberry Pi FM transmission.
+- **Improved FM Broadcasting**: Enhance signal quality of the RaspberryPi FM broadcast.
 
 ---
 
@@ -132,6 +138,7 @@ Here’s an example of how the system generates a playlist and transitions betwe
 - **Python**: For managing audio and running the core logic.
 - **Pydub**: For slicing and mixing audio files.
 - **ElevenLabs API**: For generating AI voice commentary.
+- **Together.ai**: Summaries for news commentary.
 - **fm_transmitter**: For broadcasting `.wav` files over FM via Raspberry Pi.
 
 ---
