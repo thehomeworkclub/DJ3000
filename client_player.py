@@ -4,6 +4,7 @@ import time
 import boto3
 from dotenv import load_dotenv
 import os
+import time
 
 load_dotenv()
 
@@ -38,6 +39,9 @@ while True:
         while True:
             if os.path.exists(f"segment_{segment.id}.wav"):
                 break
+            else:
+                print("Waiting for segment to finish downloading...", end="\r")
+                time.sleep(1)
         if segment.id > LAST_SEGMENT_PLAYED:
             print("Playing segment %s" % segment.segment_name)
             LAST_SEGMENT_PLAYED = segment.id
