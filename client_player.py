@@ -41,4 +41,8 @@ while True:
             print("Playing segment %s" % segment.segment_name)
             LAST_SEGMENT_PLAYED = segment.id
             os.system(f"sudo /home/pi/fm_transmitter/fm_transmitter -f {frequency} -b 300 segment_{segment.id}.wav")
+            # remove the file after playing
+            os.remove(f"segment_{segment.id}.wav")
+            s3.delete_object(Bucket="dj3000", Key=f"{segment.segment_name}.wav")
+            print("Segment %s finished" % segment.segment_name)
         time.sleep(1)
